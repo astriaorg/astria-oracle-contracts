@@ -6,10 +6,10 @@ import {AstriaOracle} from "./AstriaOracle.sol";
 // Mock currency pair aggregator contract for a single currency pair.
 contract MockAggregator is AggregatorV2V3Interface {
     // core oracle contract
-    AstriaOracle immutable public oracle;
+    AstriaOracle public immutable oracle;
 
     // currency pair hash
-    bytes32 immutable public currencyPairHash;
+    bytes32 public immutable currencyPairHash;
 
     constructor(AstriaOracle _oracle, bytes32 _currencyPairHash) {
         oracle = _oracle;
@@ -17,9 +17,9 @@ contract MockAggregator is AggregatorV2V3Interface {
     }
 
     /* v2 aggregator interface */
-    
+
     function latestAnswer() external view returns (int256) {
-        (uint128 price, ) = oracle.priceData(oracle.latestBlockNumber(), currencyPairHash);
+        (uint128 price,) = oracle.priceData(oracle.latestBlockNumber(), currencyPairHash);
         return int256(uint256(price));
     }
 
@@ -33,7 +33,7 @@ contract MockAggregator is AggregatorV2V3Interface {
     }
 
     function getAnswer(uint256 roundId) external view returns (int256) {
-        (uint128 price, ) = oracle.priceData(roundId, currencyPairHash);
+        (uint128 price,) = oracle.priceData(roundId, currencyPairHash);
         return int256(uint256(price));
     }
 
@@ -56,9 +56,11 @@ contract MockAggregator is AggregatorV2V3Interface {
         return 0;
     }
 
-    function getRoundData(
-        uint80 _roundId
-    ) external view returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound) {
+    function getRoundData(uint80 _roundId)
+        external
+        view
+        returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound)
+    {
         (uint128 price, uint256 timestamp) = oracle.priceData(_roundId, currencyPairHash);
         return (_roundId, int256(uint256(price)), timestamp, timestamp, _roundId);
     }
@@ -66,7 +68,8 @@ contract MockAggregator is AggregatorV2V3Interface {
     function latestRoundData()
         external
         view
-        returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound) {
+        returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound)
+    {
         roundId = uint80(oracle.latestBlockNumber());
         (uint128 price, uint256 timestamp) = oracle.priceData(roundId, currencyPairHash);
         return (roundId, int256(uint256(price)), timestamp, timestamp, roundId);
