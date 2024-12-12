@@ -45,7 +45,8 @@ contract MockAggregator is AggregatorV2V3Interface {
     /* v3 aggregator interface */
 
     function decimals() external view returns (uint8) {
-        return oracle.decimals(currencyPairHash);
+        (, uint8 _decimals) = oracle.currencyPairInfo(currencyPairHash);
+        return _decimals;
     }
 
     function description() external pure returns (string memory) {

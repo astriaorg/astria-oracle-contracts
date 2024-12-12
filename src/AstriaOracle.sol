@@ -7,11 +7,22 @@ contract AstriaOracle {
     // the `astriaOracleSenderAddress` built into the astria-geth node
     address public immutable ORACLE;
 
+    struct PriceData {
+        uint128 price;
+        uint256 timestamp;
+    }
+
     // mapping of block number to mapping of hash of the currency pair string to its price data
     mapping(uint256 => mapping(bytes32 => PriceData)) public priceData;
 
+    struct CurrencyPairInfo {
+        // require an explicit initialization boolean, as otherwise the default value of 0 would be ambiguous
+        bool initialized;
+        uint8 decimals;
+    }
+
     // mapping of hash of the currency pair string to the number of decimals the price is represented in
-    mapping(bytes32 => uint8) public decimals;
+    mapping(bytes32 => CurrencyPairInfo) public currencyPairInfo;
 
     // block number of the latest price data update
     uint256 public latestBlockNumber;
@@ -21,13 +32,12 @@ contract AstriaOracle {
         _;
     }
 
-    struct PriceData {
-        uint128 price;
-        uint256 timestamp;
+    constructor(address _oracle) {
+        ORACLE = _oracle;
     }
 
-    function setDecimals(bytes32 _currencyPair, uint8 _decimals) external onlyOracle {
-        decimals[_currencyPair] = _decimals;
+    function initializeCurrencyPair(bytes32 _currencyPair, uint8 _decimals) external onlyOracle {
+        currencyPairInfo[_currencyPair] = CurrencyPairInfo(true, _decimals);
     }
 
     function updatePriceData(bytes32[] memory _currencyPairs, uint128[] memory _prices) external onlyOracle {

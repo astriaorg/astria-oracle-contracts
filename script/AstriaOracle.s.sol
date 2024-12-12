@@ -12,7 +12,8 @@ contract AstriaOracleScript is Script {
     function run() public {
         vm.startBroadcast();
 
-        astriaOracle = new AstriaOracle();
+        address oracleSenderAddress = vm.envAddress("EVM_ORACLE_SENDER_ADDRESS");
+        astriaOracle = new AstriaOracle(oracleSenderAddress);
 
         vm.stopBroadcast();
     }
