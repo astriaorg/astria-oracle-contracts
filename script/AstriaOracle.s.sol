@@ -9,12 +9,23 @@ contract AstriaOracleScript is Script {
 
     function setUp() public {}
 
-    function run() public {
-        vm.startBroadcast();
+    function deploy() public {
+        vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
 
         address oracleSenderAddress = vm.envAddress("EVM_ORACLE_SENDER_ADDRESS");
-        astriaOracle = new AstriaOracle(oracleSenderAddress);
+        AstriaOracle oracle = new AstriaOracle(oracleSenderAddress);
 
         vm.stopBroadcast();
+
+        console.logBytes(address(oracle).code);
+    }
+
+    function getPrice() public view {
+        address oracleContract = vm.envAddress("ORACLE_CONTRACT_ADDRESS");
+        AstriaOracle oracle = AstriaOracle(oracleContract);
+        bytes32 pair = keccak256("ETH/USD");
+        uint256 latestBlockNumber = oracle.latestBlockNumber();
+        (uint128 price,) = oracle.priceData(latestBlockNumber, pair);
+        console.logUint(price);
     }
 }
