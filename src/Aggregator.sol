@@ -3,16 +3,16 @@ pragma solidity ^0.8.21;
 import {AggregatorV2V3Interface} from "./interfaces/AggregatorV2V3Interface.sol";
 import {AstriaOracle} from "./AstriaOracle.sol";
 
-// Mock currency pair aggregator contract for a single currency pair.
-contract MockAggregator is AggregatorV2V3Interface {
+// Currency pair aggregator contract for a single currency pair.
+contract Aggregator is AggregatorV2V3Interface {
     // core oracle contract
     AstriaOracle public immutable oracle;
 
     // currency pair hash
     bytes32 public immutable currencyPairHash;
 
-    constructor(AstriaOracle _oracle, bytes32 _currencyPairHash) {
-        oracle = _oracle;
+    constructor(address _oracle, bytes32 _currencyPairHash) {
+        oracle = AstriaOracle(_oracle);
         currencyPairHash = _currencyPairHash;
     }
 
@@ -50,7 +50,7 @@ contract MockAggregator is AggregatorV2V3Interface {
     }
 
     function description() external pure returns (string memory) {
-        return "MockAggregator";
+        return "ExampleAggregator";
     }
 
     function version() external pure returns (uint256) {

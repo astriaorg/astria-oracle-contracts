@@ -22,3 +22,13 @@ The script has an example function which calls `getPrice()` for `ETH/USD`. You c
 ```sh
 forge script script/AstriaOracle.s.sol:AstriaOracleScript    --rpc-url $RPC_URL --broadcast --sig "getPrice()" -vvvv
 ```
+
+### deploy an aggregator 
+
+In `.env`, set `ORACLE_CONTRACT_ADDRESS` to the contract address of a deployed `AstriaOracle` contract and set `CURRENCY_PAIR` to the desired currency pair.
+
+```sh
+forge script script/Aggregator.s.sol:AggregatorScript   --rpc-url $RPC_URL --broadcast --sig "deploy()" -vvvv
+```
+
+### query aggregator
