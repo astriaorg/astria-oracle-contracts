@@ -32,3 +32,9 @@ forge script script/Aggregator.s.sol:AggregatorScript   --rpc-url $RPC_URL --bro
 ```
 
 ### query aggregator
+
+Set `AGGREGATOR_CONTRACT_ADDRESS` in `.env` to the deployed address.
+
+```sh
+forge script script/Aggregator.s.sol:AggregatorScript   --rpc-url $RPC_URL --broadcast --sig "getLatestRoundData()" -vvvv
+```
