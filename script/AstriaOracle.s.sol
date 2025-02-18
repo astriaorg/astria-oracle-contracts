@@ -9,7 +9,7 @@ contract AstriaOracleScript is Script {
         vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
 
         address oracleSenderAddress = vm.envAddress("EVM_ORACLE_SENDER_ADDRESS");
-        new AstriaOracle(oracleSenderAddress);
+        new AstriaOracle(oracleSenderAddress, false);
 
         vm.stopBroadcast();
     }
@@ -22,6 +22,7 @@ contract AstriaOracleScript is Script {
 
         bytes32 pairA = keccak256(bytes(vm.envString("CURRENCY_PAIR_A")));
         bytes32 pairB = keccak256(bytes(vm.envString("CURRENCY_PAIR_B")));
+
         bytes32[] memory pairs = new bytes32[](2);
         pairs[0] = pairA;
         pairs[1] = pairB;
@@ -31,7 +32,20 @@ contract AstriaOracleScript is Script {
 
         oracle.initializeCurrencyPair(pairA, 18);
         oracle.initializeCurrencyPair(pairB, 18);
-        oracle.updatePriceData(pairs, prices);
+        oracle.setPrices(pairs, prices);
+
+        vm.stopBroadcast();
+    }
+
+    function setPrice() public {
+        address oracleContract = vm.envAddress("ORACLE_CONTRACT_ADDRESS");
+        AstriaOracle oracle = AstriaOracle(oracleContract);
+
+        vm.startBroadcast(vm.envUint("EVM_ORACLE_SENDER_ADDRESS_PRIVATE_KEY"));
+
+        bytes32 pair = keccak256(bytes(vm.envString("CURRENCY_PAIR_A")));
+        uint128 price = uint128(400000000000000);
+        oracle.setPrice(pair, price);
 
         vm.stopBroadcast();
     }
