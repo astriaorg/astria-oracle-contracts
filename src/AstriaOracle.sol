@@ -68,7 +68,10 @@ contract AstriaOracle is Ownable {
     }
 
     function initializeCurrencyPair(bytes32 _currencyPair, uint8 _decimals) external onlyOracle {
-        if (requireCurrencyPairAuthorization && !authorizedCurrencyPairs[_currencyPair]) {
+        if (
+            requireCurrencyPairAuthorization && !authorizedCurrencyPairs[_currencyPair]
+                && !currencyPairInfo[_currencyPair].initialized
+        ) {
             revert UnauthorizedCurrencyPair(_currencyPair);
         }
 
