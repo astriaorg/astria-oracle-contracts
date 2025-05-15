@@ -37,8 +37,8 @@ contract AstriaOracle is Ownable {
     // block number of the latest price data update
     uint256 public latestBlockNumber;
 
-    // occurs when a currency pair is initialized
-    event CurrencyPairInitialized(bytes32 currencyPair, uint8 decimals);
+    // occurs when a currency pair is set
+    event CurrencyPairSet(bytes32 currencyPair, uint8 decimals);
 
     // occurs when a pair's price data is updated
     event PriceDataUpdated(bytes32 currencyPair, uint128 price);
@@ -46,7 +46,7 @@ contract AstriaOracle is Ownable {
     // occurs when attempting to update the price for an uninitialized currency pair
     error UninitializedCurrencyPair(uint256 index);
 
-    // occurs when attempting to initialize an unauthorized currency pair, when authorization is required
+    // occurs when attempting to set an unauthorized currency pair, when authorization is required
     error UnauthorizedCurrencyPair(bytes32 currencyPair);
 
     modifier onlyOracle() {
@@ -67,7 +67,7 @@ contract AstriaOracle is Ownable {
         authorizedCurrencyPairs[_currencyPair] = true;
     }
 
-    function initializeCurrencyPair(bytes32 _currencyPair, uint8 _decimals) external onlyOracle {
+    function setCurrencyPair(bytes32 _currencyPair, uint8 _decimals) external onlyOracle {
         if (
             requireCurrencyPairAuthorization && !authorizedCurrencyPairs[_currencyPair]
                 && !currencyPairInfo[_currencyPair].initialized
@@ -76,7 +76,7 @@ contract AstriaOracle is Ownable {
         }
 
         currencyPairInfo[_currencyPair] = CurrencyPairInfo(true, _decimals);
-        emit CurrencyPairInitialized(_currencyPair, _decimals);
+        emit CurrencyPairSet(_currencyPair, _decimals);
     }
 
     function setPrices(bytes32[] memory _currencyPairs, uint128[] memory _prices) external onlyOracle {

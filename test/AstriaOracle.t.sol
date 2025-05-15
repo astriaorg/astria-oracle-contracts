@@ -18,7 +18,7 @@ contract AstriaOracleTest is Test {
         vm.prank(oracleCallerAddress);
 
         bytes32 pair = keccak256(bytes("ETH/USD"));
-        oracle.initializeCurrencyPair(pair, 18);
+        oracle.setCurrencyPair(pair, 18);
         (bool initialized, uint8 decimals) = oracle.currencyPairInfo(pair);
         assert(initialized);
         assertEq(decimals, 18, "decimals should be 18");
@@ -29,11 +29,11 @@ contract AstriaOracleTest is Test {
         oracle.setRequireCurrencyPairAuthorization(true);
         vm.expectRevert();
         vm.prank(oracleCallerAddress);
-        oracle.initializeCurrencyPair(pair, 18);
+        oracle.setCurrencyPair(pair, 18);
 
         oracle.authorizeCurrencyPair(pair);
         vm.prank(oracleCallerAddress);
-        oracle.initializeCurrencyPair(pair, 18);
+        oracle.setCurrencyPair(pair, 18);
         (bool initialized, uint8 decimals) = oracle.currencyPairInfo(pair);
         assert(initialized);
         assertEq(decimals, 18, "decimals should be 18");

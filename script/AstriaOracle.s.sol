@@ -30,8 +30,8 @@ contract AstriaOracleScript is Script {
         prices[0] = uint128(400000000000000);
         prices[1] = uint128(500000000000000);
 
-        oracle.initializeCurrencyPair(pairA, 18);
-        oracle.initializeCurrencyPair(pairB, 18);
+        oracle.setCurrencyPair(pairA, 18);
+        oracle.setCurrencyPair(pairB, 18);
         oracle.setPrices(pairs, prices);
 
         vm.stopBroadcast();
